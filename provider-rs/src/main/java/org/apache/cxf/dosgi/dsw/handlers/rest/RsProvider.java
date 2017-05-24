@@ -28,10 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.Provider;
 
 import org.apache.aries.rsa.spi.DistributionProvider;
 import org.apache.aries.rsa.spi.Endpoint;
@@ -50,7 +47,6 @@ import org.apache.cxf.feature.Feature;
 import org.apache.cxf.jaxrs.AbstractJAXRSFactoryBean;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
-import org.apache.cxf.jaxrs.ext.ContextProvider;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Component;
@@ -173,11 +169,7 @@ public class RsProvider extends BaseDistributionProvider implements Distribution
     }
     
     private boolean isProvider(Object intent) {
-        return (intent instanceof ExceptionMapper) // 
-            || (intent instanceof MessageBodyReader) //
-            || (intent instanceof MessageBodyWriter) //
-            || (intent instanceof ContextResolver) //
-            || (intent instanceof ContextProvider); 
+        return intent.getClass().getAnnotation(Provider.class) != null;
     }
 
     private Endpoint createServerFromFactory(JAXRSServerFactoryBean factory,
